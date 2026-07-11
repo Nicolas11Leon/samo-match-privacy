@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.M.O - Abriendo Reserva</title>
+    <style>
+        body {
+            background-color: #030407;
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #C4FF00; /* Verde neón */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .text {
+            font-size: 14px;
+            letter-spacing: 2px;
+            color: #94A3B8;
+        }
+        .fallback {
+            margin-top: 30px;
+            font-size: 12px;
+        }
+        .fallback a {
+            color: #C4FF00;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="text">ABRIENDO APP...</div>
+    
+    <div class="fallback" id="fallback-ui" style="display: none;">
+        ¿No se abrió la app? <a href="#" id="manual-link">Toca aquí para reintentar</a>
+    </div>
+
+    <script>
+        // Obtener el ID de la url actual (ej: reserva.html?id=123)
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookingId = urlParams.get('id');
+
+        if (bookingId) {
+            const deepLink = "samo://booking?id=" + bookingId;
+            
+            // Configurar el botón de reintento por si falla
+            document.getElementById('manual-link').href = deepLink;
+
+            // Intentar abrir la app automáticamente
+            window.location.replace(deepLink);
+
+            // Mostrar el botón de reintento si después de 2 segundos no se ha ido de la página
+            setTimeout(() => {
+                document.getElementById('fallback-ui').style.display = 'block';
+            }, 2000);
+        } else {
+            document.querySelector('.text').innerText = "ERROR: RESERVA NO ENCONTRADA";
+            document.querySelector('.loader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
